@@ -163,6 +163,8 @@ bool LegOdometer::estimateVelocity(const uint64_t utime,
 
     // Recording foot position and base velocity from legs
     foot_pos_ = forward_kinematics_.getFeetPos(q);
+    //std::cout << "foot pos: \n";
+    //std::cout << foot_pos_ << std::endl;
     for(int leg = LF; leg <= RH; leg++){
         base_vel_leg_[LegID(leg)] = - feet_jacobians_.getFootJacobian(q, LegID(leg))
                             * qd.block<3,1>(leg * 3, 0)

@@ -6,6 +6,9 @@
 
 namespace pronto {
 namespace quadruped {
+
+Eigen::VectorXd fromRosToModel(const sensor_msgs::JointState &msg, const int var);
+
 bool jointStateFromROS(const sensor_msgs::JointState& msg,
                        uint64_t& utime,
                        JointState& q,

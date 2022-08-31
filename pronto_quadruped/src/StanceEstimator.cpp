@@ -191,6 +191,10 @@ bool StanceEstimator::getStance(LegBoolMap &stance,
     if(!getGRF(grf_)){
         return false;
     }
+
+    //std::cout << "foot force: \n";
+    //std::cout << grf_ << std::endl;
+
     // get the Ground Reaction Forces at the feet, expressed in the base frame
     for(int leg_id  = 0; leg_id < _LEGS_COUNT; leg_id++) {
         grForceDelta[leg_id] = -grf_[leg_id](Z);

@@ -4,6 +4,46 @@
 namespace pronto {
 namespace quadruped {
 
+// fix the order of the joints from ROS to be compatible with Pronto
+Eigen::VectorXd fromRosToModel(const sensor_msgs::JointState &msg, const int var) {
+
+	int num_joints = msg.name.size();
+	Eigen::VectorXd joints = Eigen::VectorXd::Zero(num_joints);
+	int idx = 0;
+
+	switch(var) {
+	  case 0:
+		idx = 0;
+		for (int i = 0; i < 4; i++) {
+			idx = 3*i;
+			joints[idx] = msg.position.at(idx+1);
+			joints[idx+1] = msg.position.at(idx+2);
+			joints[idx+2] = msg.position.at(idx);
+		}
+	    break;
+	  case 1:
+		idx = 0;
+		for (int i = 0; i < 4; i++) {
+			idx = 3*i;
+			joints[idx] = msg.velocity.at(idx+1);
+			joints[idx+1] = msg.velocity.at(idx+2);
+			joints[idx+2] = msg.velocity.at(idx);
+		}
+	    break;
+	  case 2:
+		idx = 0;
+		for (int i = 0; i < 4; i++) {
+			idx = 3*i;
+			joints[idx] = msg.effort.at(idx+1);
+			joints[idx+1] = msg.effort.at(idx+2);
+			joints[idx+2] = msg.effort.at(idx);
+		}
+	    break;
+	}
+
+	return joints;
+}
+
 bool jointStateFromROS(const sensor_msgs::JointState& msg,
                        uint64_t& utime,
                        JointState& q,
@@ -24,14 +64,18 @@ bool jointStateFromROS(const sensor_msgs::JointState& msg,
     }
     // store message time in microseconds
     utime = msg.header.stamp.toNSec() / 1000;
-    for(int i=0; i<12; i++){
-      q(i) = msg.position[i];
-      qd(i) = msg.velocity[i];
-      tau(i) = msg.effort[i];
-    }
+//    for(int i=0; i<12; i++){
+//      q(i) = msg.position[i];
+//      qd(i) = msg.velocity[i];
+//      tau(i) = msg.effort[i];
+//    }
     //q = Eigen::Map<const JointState>(msg.position.data());
     //qd = Eigen::Map<const JointState>(msg.velocity.data());
     //tau = Eigen::Map<const JointState>(msg.effort.data());
+
+    q = fromRosToModel(msg, 0);
+    qd = fromRosToModel(msg, 1);
+    tau = fromRosToModel(msg, 2);
 
     qdd.setZero(); // TODO compute the acceleration
 

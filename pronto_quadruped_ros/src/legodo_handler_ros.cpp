@@ -225,6 +225,8 @@ LegodoHandlerBase::Update* LegodoHandlerBase::computeVelocity(){
 
   // get the ground reaction forces from the stance estimator
   stance_estimator_.getGRF(grf_);
+  //std::cout << "computeVelocity (228): \n";
+  //std::cout << grf_ << std::endl;
 
   // and pass them over to the leg odometer
   leg_odometer_.setGrf(grf_);

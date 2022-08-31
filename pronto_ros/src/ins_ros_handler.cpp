@@ -16,6 +16,7 @@ InsHandlerROS::InsHandlerROS(ros::NodeHandle &nh) : nh_(nh)
     std::string imu_frame = "imu";
 
     nh_.getParam(ins_param_prefix + "frame", imu_frame);
+    ROS_INFO_STREAM("[InsHandlerROS] Name of imu_link: '" << imu_frame << "'");
     std::string base_frame = "base";
     nh_.param<std::string>("base_link_name", base_frame, "base");
     ROS_INFO_STREAM("[InsHandlerROS] Name of base_link: '" << base_frame << "'");
